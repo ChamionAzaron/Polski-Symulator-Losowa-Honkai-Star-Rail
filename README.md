@@ -1,0 +1,1 @@
+# Polski-Symulator-Losowa-Honkai-Star-Rail
