@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Symulator Gacha - HSR</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1c1c1c;
+      color: #fff;
+      text-align: center;
+    }
+
+    header {
+      padding: 20px;
+      font-size: 26px;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(5, 100px);
+      grid-gap: 7px; 
+      justify-content: center;
+      margin-bottom: 10px;
+    }
+
+    .five-stars {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      margin: 20px;
+      gap: 5px;
+    }
+
+    .five-stars img {
+      width: 80px;
+      height: 80px;
+      border: 3px solid gold;
+      border-radius: 8px;
+    }
+
+    .counter {
+      margin: 15px 0;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    
+    .counterPit {
+      margin: 15px 0;
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+
+    .counter-win {
+  	color: lightgreen;
+  	font-weight: bold;
+	margin-bottom: 10px;
+	}
+
+    .counter-loss {
+  	color: #ff6666;
+  	font-weight: bold;
+	margin-bottom: 10px;
+	}
+
+    .video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .summon-video {
+      width: 120%;
+      height: 120%;
+      max-width: 1800px;
+      border: 2px solid gold;
+    }
+    
+    #results img {
+  	width: 100px;
+  	height: 100px;
+  	margin: 2px;
+  	border: 3px solid transparent;
+	border-radius: 8px;
+	opacity: 1;
+  	transition: opacity 0.1s ease;
+	}
+
+    .fading-out {
+  	opacity: 0;
+    }
+
+  </style>
+</head>
+<body>
+
+  <header>Polski Symulator Losowań Honkai: Star Rail</header>
+
+  <div class="counter">Liczba losowań: <span id="counter">0</span></div> 
+  <div class="counterPit">Obence pity: <span id="counterPit">0</span></div>
+
+  <button id="rollBtn">Losuj 10x</button>
+
+  <!-- pole na aktualne losowanie -->
+  <div class="results" id="results"></div>
+
+  <!-- sekcja zdobytych 5★ -->
+  <h2>Zdobyte 5★ postacie:</h2>
+  <div class="five-stars" id="fiveStars"></div>
+
+  <div class="counter-win">Liczba wygranych 50/50: <span id="counterwin">0</span></div>
+  <div class="counter-loss">Liczba przegranych 50/50: <span id="counterloss">0</span></div>
+  
+  <button id="musicBtn">Odtwórz losową muzykę</button>
+  <audio id="bgMusic" autoplay loop></audio>
+  <button id="musicStopBtn">Wyłącz muzykę</button>
+
+  <div><button id="resetbtn">Resetuj</button></div>
+
+  <div class="video-overlay" id="videoOverlay">
+    <video class="summon-video" id="summonVideo" controls></video></div>	
+  
+  <script src="script.js"></script>
+</body>
+</html>
