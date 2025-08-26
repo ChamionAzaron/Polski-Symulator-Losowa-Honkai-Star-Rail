@@ -87,19 +87,30 @@ function rollOne(forceFourStar = false, forceFiveStar = false, countPity = true)
 function rollFiveStar() {
   let chosen;
   if (guaranteePremium) {
+    // Gwarancja premium → nie liczymy tego jako win/loss 50/50
     chosen = getRandomFrom(pool["5_premium"], "5");
     guaranteePremium = false;
   } else {
     const rand = Math.random() * 100;
     if (rand < 56) {
+      // Wygrana 50/50
       chosen = getRandomFrom(pool["5_premium"], "5");
+      win50++;
     } else {
+      // Przegrana 50/50, następny 5★ musi być premium
       chosen = getRandomFrom(pool["5_standard"], "5");
       guaranteePremium = true;
+      loss50++;
     }
   }
+
+  // odświeżenie liczników
+  counterSpanW.textContent = win50;
+  counterSpanL.textContent = loss50;
+
   return chosen;
 }
+
 
 // helper: losuje z listy obrazków
 function getRandomFrom(arr, rarity) {
@@ -172,7 +183,7 @@ function displayResults(rolls) {
       };
 
       if (r.rarity === "5") {
-        // Funkcja do odkrywania karty 5-gwiazdkowej
+        // Funkcja do odkrywania karty 5★
         const revealFiveStar = () => {
           img.src = r.src;
           img.style.borderColor = "gold";
@@ -182,34 +193,25 @@ function displayResults(rolls) {
           fiveImg.src = r.src;
           fiveStarsDiv.appendChild(fiveImg);
 
-          // naliczanie pity i 50/50
+          // reset pity przy 5★
           pityCounter = 0;
           counterPit.textContent = pityCounter;
-          if (!guaranteePremium) win50++;
-          else loss50++;
-          counterSpanW.textContent = win50;
-          counterSpanL.textContent = loss50;
 
-          // odtworzenie dźwięku
+          // dźwięk
           playSFX("5sfx.m4a");
         };
 
-        // Sprawdzamy czy jest filmik w folderze 5starvideo
+        // sprawdzamy filmik dla konkretnej postaci
         const videoFile = `5starvideo/${r.name.replace(".png", "")}.mp4`;
         fetch(videoFile, { method: 'HEAD' })
           .then(res => {
             if (res.ok) {
-              // Odtwarzamy filmik, a po zakończeniu odkrywamy kartę
               playSummonVideo(videoFile, revealFiveStar);
             } else {
-              // Jeśli filmik nie istnieje, od razu odkrywamy kartę
               revealFiveStar();
             }
           })
-          .catch(() => {
-            // W przypadku błędu (np. brak sieci), odkrywamy kartę
-            revealFiveStar();
-          });
+          .catch(() => revealFiveStar());
 
       } else {
         // 3★ lub 4★: fade-out question, pokazujemy kartę i sfx
@@ -218,12 +220,13 @@ function displayResults(rolls) {
           img.src = r.src;
           img.style.borderColor = r.rarity === "4" ? "violet" : "grey";
           img.classList.remove("fading-out");
+
           playSFX(r.rarity === "3" ? "3sfx.m4a" : "4sfx.m4a");
 
-          // naliczanie pity
+          // naliczanie pity dla 3★/4★
           pityCounter++;
           counterPit.textContent = pityCounter;
-        }, 400);
+        }, 100);
       }
     });
 
